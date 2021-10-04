@@ -1,0 +1,1 @@
+export const MB=1_000_000;
