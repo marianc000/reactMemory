@@ -1,3 +1,5 @@
+import 'https://unpkg.com/react@17/umd/react.production.min.js';
+import 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js';
 import run from './benchmarking.js';
 
 import { render as react, clear as rclear } from './approaches/react.js';

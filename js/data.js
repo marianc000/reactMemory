@@ -12,15 +12,4 @@ function generateData() {
     return rows;
 }
 
-function modifyOneCell(data) {
-    const rows = data.slice();
-    const modifiedRow = rows[20].slice();
-    modifiedRow[10] = 'TEST';
-    rows[20] = modifiedRow;
-    return rows;
-}
-
-export const data = generateData();
-export const data2 = modifyOneCell(data);
- 
-  
+export default generateData();

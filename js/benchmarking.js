@@ -1,10 +1,24 @@
 // benchmarking.js
-import { render as rrender, clear as rclear } from './approaches/react.js';
-import { render, clear } from './approaches/noreact.js';
-import { data, data2 } from './data.js';
+import { render as react, clear as rclear } from './approaches/react.js';
+import { render as noreact, clear } from './approaches/noreact.js';
+
 import { execute } from './shared.js';
-import { memory, getHistory } from './memory.js';
+import { getHistory, memory } from './memory.js';
 import { clearScreen } from './main.js';
+
+function plot(data) {
+    console.log(data);
+    import('./plot.js')
+        .then(({ plot, COLORS: { green, red,blue, orange, purple } }) => {
+            const colors=data.map((v,i,ar)=>{
+                if(i<times*2){
+                    return i%2===0?red:orange;
+                }
+                return (i%2===0||i===ar.length-1)?blue:purple;
+            })
+                plot(data, colors);
+        });
+}
 
 function promise(func) {
     return new Promise(resolve => {
@@ -15,37 +29,32 @@ function promise(func) {
     });
 }
 
-function plot(data) {
-    import('./plot.js')
-        .then(({ plot, COLORS: { green, red, orange, purple } }) => plot(data, [green, red, orange, red, purple, orange, purple]));
-}
-
-const noreact = () => render(data);
-const noreact2 = () => render(data2);
 const empty = () => promise(clear);
-
-const react = () => rrender(data);
-const react2 = () => rrender(data2);
 const rempty = () => promise(rclear);
 
-export default function run() {
-    const times =1;
+// needed for react, react nulls previously displayed nodes not immediately but in the next frame
+const skipFrame = () => promise(() => 0);
+const times = 3;
 
-    let p = Promise.resolve().then(() => promise(clearScreen)).then(memory('baseline'));
+export default function run() {
+
+
+    let p = Promise.resolve().then(() => promise(clearScreen))
+        .then(skipFrame);
 
     for (let i = 0; i < times; i++) {
         p = p.then(() => execute('noreact', noreact))
-            .then(empty);
+            .then(empty).then(skipFrame);
     }
 
     for (let i = 0; i < times; i++) {
         p = p.then(() => execute('react', react))
-            .then(rempty);
+            .then(rempty).then(skipFrame);
     }
 
-    p.then(() => promise(() => chart.style.display = 'block'))
+    p.then(() => memory('end'))
+        .then(() => promise(() => chart.style.display = 'block'))
         .then(() => {
             plot(getHistory());
         });
-
 }

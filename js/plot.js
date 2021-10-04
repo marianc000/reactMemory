@@ -17,11 +17,10 @@ function transparent(color) {
 let currentChart;
 
 export function plot(source,borderColor) {
-//  console.log(">plot",chart.offsetHeight,chart.offsetWidth);
   const backgroundColor = borderColor.map(c => transparent(c));
 
-  memoryChart.parentNode.style.height = source.length * 50 + "px";
- // console.log(">plot2",chart.offsetHeight,chart.offsetWidth);
+  memoryChart.parentNode.style.height = source.length * 30 + "px";
+
   const data = {
     labels: source.map(([label, mbs]) => label),
     datasets: [
@@ -82,7 +81,7 @@ export function plot(source,borderColor) {
         },
         y: {
           title: {
-            text: 'statements executed from top to bottom',
+            text: 'Executed from top to bottom',
             display: true
           }
         }
