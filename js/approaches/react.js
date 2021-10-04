@@ -19,6 +19,7 @@ function Table({
 }
 
 export function render(data) {
+    console.log(">render react");
     ReactDOM.render(React.createElement(Table, {
         rows: data
     }), root);

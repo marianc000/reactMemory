@@ -16,6 +16,7 @@ function table(data) {
 }
 
 export function render(data) {
+    console.log(">render not react");
     root.replaceChildren(...table(data));
 }
 
